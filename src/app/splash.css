@@ -1,0 +1,49 @@
+.shiny-title {
+  background: linear-gradient(
+    to right,
+    #0000bd 0%,
+    #be3dbf 25%,
+    #b985ba,
+    #be3dbf 30%,
+    #0000bd 50%,
+    #00ff9e,
+    #3dff02,
+    #bffc60,
+    #fafd00,
+    #fe4f05,
+    #fd1805,
+    #fd51db 90%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: none;
+  color: transparent;
+  animation: shine 4.5s ease-in-out 1 forwards;
+  background-size: 800%;
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .shiny-title {
+    color: white;
+    padding: 0.5rem 1.5rem 2rem 1.5rem;
+  }
+}
+
+@keyframes shine {
+  0% {
+    opacity: 0;
+    background-position: 100% 50%;
+  }
+
+  20% {
+    opacity: 0.75;
+  }
+
+  50% {
+    opacity: 1;
+    background-position: 50% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}

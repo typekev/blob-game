@@ -26,18 +26,17 @@ export default function Field() {
 
   const addExp = (id: BlobID) => {
     const blob = blobs.get(id);
-    if (blob !== undefined) {
+    if (blob) {
       blob.exp++;
       if (blob.level < MAX_LEVEL && blob.exp >= getRequiredExp(blob.level)) {
         blob.level++;
-        levelAudio.play();
+        levelAudio?.playFrom();
         if (
-          blob.level === FIRST_SKILL_LEVEL ||
-          blob.level % LEVEL_SKILL_INCR === 0
+          blob.skills.length < MAX_SKILLS &&
+          (blob.level === FIRST_SKILL_LEVEL ||
+            blob.level % LEVEL_SKILL_INCR === 0)
         ) {
-          const newSkill =
-            blob.skills.length < MAX_SKILLS &&
-            getNewSkill(blob.type, blob.skills);
+          const newSkill = getNewSkill(blob.type, blob.skills);
           if (newSkill) {
             blob.skills.push(newSkill);
             setCurrentBlob(blob);
@@ -45,8 +44,7 @@ export default function Field() {
           }
         }
       } else {
-        levelAudio.currentTime = 0.2;
-        levelAudio.play();
+        levelAudio?.playFrom(0.2);
       }
 
       updateBlob(blob);

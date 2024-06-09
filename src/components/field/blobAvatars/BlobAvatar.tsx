@@ -127,18 +127,16 @@ export function BlobAvatar({
                     Exp: {exp}
                     {level < MAX_LEVEL && ` / ${getRequiredExp(level)}`}
                   </p>
-                  <p>
-                    Skills:{" "}
-                    {skills.length > 0 ? (
-                      <ul>
-                        {skills.map((skill) => (
-                          <li key={skill}>{skill}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      "N/A"
-                    )}
-                  </p>
+                  <p>Skills:</p>
+                  {skills.length > 0 ? (
+                    <ul>
+                      {skills.map((skill) => (
+                        <li key={skill}>{skill}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    "N/A"
+                  )}
                 </section>
               </section>
             </section>

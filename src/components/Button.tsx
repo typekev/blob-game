@@ -19,15 +19,8 @@ export function Button({
   className,
   ...rest
 }: Props) {
-  const handleClick = () => {
-    if (disabled) {
-      disabledAudio.currentTime = 0;
-      disabledAudio.play();
-    } else {
-      selectAudio.currentTime = 0;
-      selectAudio.play();
-    }
-  };
+  const handleClick = () =>
+    disabled ? disabledAudio?.playFrom() : selectAudio?.playFrom();
 
   return (
     <button

@@ -18,10 +18,6 @@ export function Nav() {
   const [isNavExtended, setIsNavExtended] = useState(false);
   const [isRestartDialogOpen, setIsRestartDialogOpen] = useState(false);
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState(false);
-  const playSound = () => {
-    selectAudio.currentTime = 0;
-    selectAudio.play();
-  };
 
   const openRestartDialog = () => setIsRestartDialogOpen(true);
   const closeRestartDialog = () => setIsRestartDialogOpen(false);
@@ -35,7 +31,10 @@ export function Nav() {
     <>
       <NavCollapseToggle
         extended={isNavExtended}
-        toggleExtended={() => setIsNavExtended(!isNavExtended)}
+        toggleExtended={() => {
+          setIsNavExtended(!isNavExtended);
+          selectAudio?.playFrom();
+        }}
       />
       <nav
         id={AppElementID.Nav}
@@ -45,10 +44,10 @@ export function Nav() {
       >
         <h2 className="w-full text-4xl my-3 bold">Blob</h2>
         <menu className="flex flex-1 flex-col">
-          <li className="w-full" onClick={playSound}>
+          <li className="w-full" onClick={() => selectAudio?.playFrom()}>
             <ViewToggle />
           </li>
-          <li className="w-full" onClick={playSound}>
+          <li className="w-full" onClick={() => selectAudio?.playFrom()}>
             <button
               onClick={openRestartDialog}
               className="py-2 underline-offset-4 hover:underline hover:text-red-600 dark:hover:text-red-300"
@@ -56,7 +55,7 @@ export function Nav() {
               Restart
             </button>
           </li>
-          <li className="w-full" onClick={playSound}>
+          <li className="w-full" onClick={() => selectAudio?.playFrom()}>
             <button
               className="py-2 underline-offset-4 hover:underline"
               onClick={openHelpDialog}
@@ -69,7 +68,7 @@ export function Nav() {
           value={theme}
           onChange={(e) => {
             setTheme(e.currentTarget.value);
-            playSound();
+            selectAudio?.playFrom();
           }}
           className="mx-3 py-2 hover:underline"
         >

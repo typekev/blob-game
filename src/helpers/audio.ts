@@ -1,17 +1,29 @@
 "use client";
-export const pluckAudio = new Audio("/audio/pluck.mp3");
+declare global {
+  interface HTMLAudioElement {
+    playFrom(time?: number): Promise<void>;
+  }
+}
 
-export const splashAudio = new Audio("/audio/splash.mp3");
-splashAudio.onloadeddata = () => {
-  splashAudio.currentTime = 1;
-  splashAudio.volume = 0.6;
-};
+HTMLAudioElement.prototype.playFrom = playFrom;
+async function playFrom(this: HTMLAudioElement, time = 0) {
+  this.currentTime = time;
+  this.play();
+}
 
-export const selectAudio = new Audio("/audio/select.mp3");
-selectAudio.onloadeddata = () => (selectAudio.volume = 0.6);
+export const pluckAudio = Audio ? new Audio("/audio/pluck.mp3") : undefined;
 
-export const disabledAudio = new Audio("/audio/disabled.mp3");
-disabledAudio.onloadeddata = () => (disabledAudio.volume = 0.6);
+export const splashAudio = Audio ? new Audio("/audio/splash.mp3") : undefined;
+if (splashAudio) splashAudio.onloadeddata = () => (splashAudio.volume = 0.3);
 
-export const levelAudio = new Audio("/audio/level.mp3");
-levelAudio.onloadeddata = () => (levelAudio.volume = 0.5);
+export const selectAudio = Audio ? new Audio("/audio/select.mp3") : undefined;
+if (selectAudio) selectAudio.onloadeddata = () => (selectAudio.volume = 0.2);
+
+export const disabledAudio = Audio
+  ? new Audio("/audio/disabled.mp3")
+  : undefined;
+if (disabledAudio)
+  disabledAudio.onloadeddata = () => (disabledAudio.volume = 0.3);
+
+export const levelAudio = Audio ? new Audio("/audio/level.mp3") : undefined;
+if (levelAudio) levelAudio.onloadeddata = () => (levelAudio.volume = 0.3);

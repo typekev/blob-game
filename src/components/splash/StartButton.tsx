@@ -8,16 +8,16 @@ export function StartButton() {
   const router = useRouter();
 
   const start = () =>
-    pluckAudio.play().then(() => setTimeout(() => setStarted(true), 100));
+    pluckAudio?.playFrom().then(() => setTimeout(() => setStarted(true), 100));
   const end = useCallback(() => router.replace("/game/editor"), [router]);
 
   useEffect(() => {
     if (started) {
-      splashAudio.addEventListener("ended", end);
-      splashAudio.play();
+      splashAudio?.addEventListener("ended", end);
+      splashAudio?.playFrom(1);
     }
 
-    return () => splashAudio.removeEventListener("ended", end);
+    return () => splashAudio?.removeEventListener("ended", end);
   }, [end, started]);
 
   return started ? (

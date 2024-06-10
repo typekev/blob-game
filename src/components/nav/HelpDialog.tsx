@@ -19,7 +19,7 @@ export function HelpDialog({ isOpen, close }: Props) {
 
   return (
     <Dialog id={AppElementID.HelpDialog} open={isOpen}>
-      <h3 className="pb-3 text-2xl">Welcome to ✦Blob!✦</h3>
+      <h3 className="pb-3 text-2xl">Welcome to ✦Blob Game!✦</h3>
       <p className="pb-1">Here are some tips:</p>
       <ul className="list-square">
         <li>You can create blobs using the &quot;Create a Blob&quot; form.</li>

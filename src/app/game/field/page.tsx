@@ -5,51 +5,16 @@ import { BlobContext } from "@/contexts/BlobContext";
 import { DeleteElementContext } from "@/contexts/DeleteElementContext";
 import { BlobAvatars } from "@/components/field/BlobAvatars";
 import { SkillDialog } from "@/components/field/SkillDialog";
-import { levelAudio } from "@/helpers/audio";
-import { getRequiredExp } from "@/helpers/exp";
-import {
-  FIRST_SKILL_LEVEL,
-  LEVEL_SKILL_INCR,
-  MAX_LEVEL,
-} from "@/helpers/level";
-import { getNewSkill, MAX_SKILLS } from "@/helpers/skills";
 
-import { AppElementID, Blob, BlobID } from "@/types.d";
+import { AppElementID, Blob } from "@/types.d";
 
 export default function Field() {
-  const { blobs, blobList, updateBlob } = useContext(BlobContext);
+  const { blobList, blobEvents } = useContext(BlobContext);
   const { deleted } = useContext(DeleteElementContext);
   const [fieldRef, setFieldRef] = useState<HTMLDivElement | null>(null);
   const [currentBlob, setCurrentBlob] = useState<Blob>();
   const [isSkillDialogOpen, setIsSkillDialogOpen] = useState(false);
   const [skillDialogTimeoutId, setSkillDialogTimeoutId] = useState<number>();
-
-  const addExp = (id: BlobID) => {
-    const blob = blobs.get(id);
-    if (blob) {
-      blob.exp++;
-      if (blob.level < MAX_LEVEL && blob.exp >= getRequiredExp(blob.level)) {
-        blob.level++;
-        levelAudio?.playFrom();
-        if (
-          blob.skills.length < MAX_SKILLS &&
-          (blob.level === FIRST_SKILL_LEVEL ||
-            blob.level % LEVEL_SKILL_INCR === 0)
-        ) {
-          const newSkill = getNewSkill(blob.type, blob.skills);
-          if (newSkill) {
-            blob.skills.push(newSkill);
-            setCurrentBlob(blob);
-            setIsSkillDialogOpen(true);
-          }
-        }
-      } else {
-        levelAudio?.playFrom(0.2);
-      }
-
-      updateBlob(blob);
-    }
-  };
 
   const onRefChange = useCallback(
     (el: HTMLDivElement | null) => setFieldRef(el),
@@ -78,23 +43,11 @@ export default function Field() {
       className="flex-1 overflow-scroll bg-[url('/images/grass.png')] bg-emerald-300 dark:bg-slate-700 dark:bg-blend-overlay bg-repeat bg-local shadow-inner"
     >
       <article ref={onRefChange} className="relative w-full h-full touch-auto">
-        {fieldRef && (
-          <BlobAvatars
-            fieldRef={fieldRef}
-            blobList={blobList}
-            addExp={addExp}
-          />
-        )}
+        {fieldRef && <BlobAvatars fieldRef={fieldRef} blobList={blobList} />}
       </article>
-      <aside
-        className={`absolute right-0 bottom-8 left-0 w-full translate-y-0 ${
-          isSkillDialogOpen ? "" : "translate-y-64"
-        } transition-transform z-[101]`}
-      >
-        {currentBlob !== undefined && (
-          <SkillDialog blob={currentBlob} onClose={closeSkillDialog} />
-        )}
-      </aside>
+      {Array.from(blobEvents.values()).map((blobEvent) => (
+        <SkillDialog key={blobEvent.eventId} blobEvent={blobEvent} />
+      ))}
     </section>
   );
 }

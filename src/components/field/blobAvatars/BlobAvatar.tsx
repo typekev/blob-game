@@ -1,14 +1,15 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
-import { getRequiredExp } from "@/helpers/exp";
-import { MAX_LEVEL } from "@/helpers/level";
+import { BlobContext } from "@/contexts/BlobContext";
 
-import type { Blob, BlobID } from "@/types.d";
+import type { Blob } from "@/types.d";
+
+import { BlobFigure } from "./BlobFigure";
+import { BlobInfo } from "./BlobInfo";
 
 interface Props extends Blob {
   field: HTMLDivElement;
-  addExp: (id: BlobID) => void;
 }
 
 export function BlobAvatar({
@@ -19,11 +20,10 @@ export function BlobAvatar({
   exp,
   skills,
   field,
-  addExp,
 }: Props) {
-  const [isGainingExp, setIsGainingExp] = useState(false);
-  const [isLevelingUp, setIsLevelingUp] = useState(false);
-  const [expTimeoutId, setExpTimeoutId] = useState<number>();
+  const { growBlob } = useContext(BlobContext);
+  const [alerts, setAlerts] = useState<string[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
 
   const size = useMemo(
     () => [Math.max(level / 2, 4), Math.max(level * 6, 48)],
@@ -46,33 +46,24 @@ export function BlobAvatar({
     []
   );
 
-  const onClickBlob = () => {
-    if (!isGainingExp) {
-      addExp(id);
-      setIsGainingExp(true);
-    }
-  };
+  useEffect(() => {
+    isMounted
+      ? setAlerts((prevAlerts) => [...prevAlerts, "+1"])
+      : setIsMounted(true);
+  }, [exp]);
 
   useEffect(() => {
-    if (expTimeoutId) {
-      clearTimeout(expTimeoutId);
-    }
-
-    setExpTimeoutId(
-      window.setTimeout(() => {
-        setIsGainingExp(false);
-        setIsLevelingUp(false);
-      }, 700)
-    );
-
-    return () => window.clearTimeout(expTimeoutId);
-  }, [isGainingExp]);
-
-  useEffect(() => {
-    if (isGainingExp) {
-      setIsLevelingUp(true);
-    }
+    isMounted
+      ? setAlerts((prevAlerts) => [...prevAlerts, `Level ${level}!  `])
+      : setIsMounted(true);
   }, [level]);
+
+  useEffect(() => {
+    setTimeout(
+      () => setAlerts((prevAlerts) => prevAlerts.toSpliced(0, 1)),
+      5000
+    );
+  }, [exp, level]);
 
   return (
     <article
@@ -95,50 +86,20 @@ export function BlobAvatar({
             }}
           >
             <section className="hover:scale-125 transition-transform">
-              <figure
-                className="relative m-auto"
-                style={{ width: size[1], height: size[1] }}
-                onClick={onClickBlob}
-              >
-                <canvas
-                  role="presentation"
-                  className={`blob-avatar-base blob-avatar-${type}`}
-                  style={{ fontSize: size[0] }}
-                >
-                  A {type} blob named {name}
-                </canvas>
-                {isGainingExp && (
-                  <figcaption className="blob-avatar-plus-one absolute top-0 right-0 -mr-3 animate-popIn whitespace-pre text-white text-shadow-xl">
-                    {isLevelingUp ? "Level Up!" : "+1"}
-                  </figcaption>
-                )}
-                <hr
-                  role="presentation"
-                  className="absolute scale-75 -z-10 w-full h-full rounded-full shadow-xl shadow-neutral-600 dark:shadow-neutral-900"
-                />
-              </figure>
-              <section className="relative w-fit mt-2.5 mx-auto px-2 py-1 text-center border-neutral-600 border-4 border-double bg-neutral-100 dark:bg-neutral-900 shadow-md shadow-neutral-600 dark:shadow-neutral-900">
-                <h3 className="-mt-2 -mb-1 text-xl text-shadow-md">{name}</h3>
-                <section className="blob-avatar-info whitespace-pre text-sm text-left overflow-hidden">
-                  <hr className="my-1 bg-neutral-900 dark:bg-neutral-400" />
-                  <p>Type: {type}</p>
-                  <p>Level: {level}</p>
-                  <p>
-                    Exp: {exp}
-                    {level < MAX_LEVEL && ` / ${getRequiredExp(level)}`}
-                  </p>
-                  <p>Skills:</p>
-                  {skills.length > 0 ? (
-                    <ul>
-                      {skills.map((skill) => (
-                        <li key={skill}>{skill}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    "N/A"
-                  )}
-                </section>
-              </section>
+              <BlobFigure
+                type={type}
+                name={name}
+                size={size}
+                onClickBlob={() => growBlob(id)}
+                alerts={alerts}
+              />
+              <BlobInfo
+                name={name}
+                type={type}
+                level={level}
+                exp={exp}
+                skills={skills}
+              />
             </section>
           </section>
         </section>

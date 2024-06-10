@@ -4,6 +4,7 @@ export enum LocalStorageKeys {
 }
 
 export type Blobs = Map<BlobID, Blob>;
+export type BlobEvents = Map<BlobEventID, BlobEvent>;
 
 export interface Blob {
   id: BlobID;
@@ -14,11 +15,17 @@ export interface Blob {
   skills: BlobSkill[];
 }
 
+export interface BlobEvent {
+  eventId: BlobEventID;
+  blob: Blob;
+}
+
 export interface NewBlob {
   name: BlobName;
   type: BlobType;
 }
 
+export type BlobEventID = number;
 export type BlobID = string;
 export type BlobName = string;
 export type BlobLevel = number;

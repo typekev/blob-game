@@ -6,13 +6,12 @@ import { DeleteElementContext } from "@/contexts/DeleteElementContext";
 import { BlobAvatars } from "@/components/field/BlobAvatars";
 import { SkillDialog } from "@/components/field/SkillDialog";
 
-import { AppElementID, Blob } from "@/types.d";
+import { AppElementID } from "@/types.d";
 
 export default function Field() {
   const { blobList, blobEvents } = useContext(BlobContext);
   const { deleted } = useContext(DeleteElementContext);
   const [fieldRef, setFieldRef] = useState<HTMLDivElement | null>(null);
-  const [currentBlob, setCurrentBlob] = useState<Blob>();
   const [isSkillDialogOpen, setIsSkillDialogOpen] = useState(false);
   const [skillDialogTimeoutId, setSkillDialogTimeoutId] = useState<number>();
 
@@ -20,11 +19,6 @@ export default function Field() {
     (el: HTMLDivElement | null) => setFieldRef(el),
     []
   );
-
-  const closeSkillDialog = () => {
-    setIsSkillDialogOpen(false);
-    window.clearTimeout(skillDialogTimeoutId);
-  };
 
   useEffect(() => {
     setSkillDialogTimeoutId(

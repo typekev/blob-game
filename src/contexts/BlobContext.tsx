@@ -30,7 +30,7 @@ interface Context {
   deleteBlob: (blobId: BlobID) => void;
   deleteAllBlobs: () => void;
   growBlob: (blobId: BlobID) => void;
-  closeBlobEvent: (eventId: BlobEventID) => void;
+  dismissBlobEvent: (eventId: BlobEventID) => void;
 }
 
 export const BlobContext = createContext<Context>({
@@ -43,7 +43,7 @@ export const BlobContext = createContext<Context>({
   deleteBlob: () => undefined,
   deleteAllBlobs: () => undefined,
   growBlob: () => undefined,
-  closeBlobEvent: () => undefined,
+  dismissBlobEvent: () => undefined,
 });
 
 export const BlobProvider = ({ children }: PropsWithChildren<unknown>) => {
@@ -127,7 +127,7 @@ export const BlobProvider = ({ children }: PropsWithChildren<unknown>) => {
     }
   };
 
-  const closeBlobEvent = (eventId: number) => {
+  const dismissBlobEvent = (eventId: number) => {
     const nextBlobEvents: BlobEvents = new Map(blobEvents);
     nextBlobEvents.delete(eventId);
     setBlobEvents(nextBlobEvents);
@@ -149,7 +149,7 @@ export const BlobProvider = ({ children }: PropsWithChildren<unknown>) => {
         deleteBlob,
         deleteAllBlobs,
         growBlob,
-        closeBlobEvent,
+        dismissBlobEvent,
       }}
     >
       {children}

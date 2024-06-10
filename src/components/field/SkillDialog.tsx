@@ -11,21 +11,28 @@ interface Props {
 }
 
 export function SkillDialog({ blobEvent }: Props) {
-  const { closeBlobEvent } = useContext(BlobContext);
-  const [closing, setClosing] = useState(false);
+  const { dismissBlobEvent } = useContext(BlobContext);
+  const [closed, setClosed] = useState(true);
 
   useEffect(() => {
-    if (closing) setTimeout(() => closeBlobEvent(blobEvent.eventId), 1000);
-  }, [closing]);
+    setClosed(false);
+  }, []);
+
+  const close = () => {
+    setClosed(true);
+    setTimeout(() => {
+      dismissBlobEvent(blobEvent.eventId);
+    }, 500);
+  };
 
   return (
     <aside
       className={`absolute right-0 bottom-8 left-0 w-full translate-y-0 ${
-        closing ? "" : "translate-y-64"
+        closed ? "translate-y-96" : ""
       } transition-transform z-[101]`}
     >
-      <dialog className="absolute right-0 bottom-8 left-0 w-full translate-y-0 transition-transform z-[101]">
-        <section className="mx-auto w-96 p-8 bg-neutral-50 dark:bg-neutral-900 border-8 border-double border-neutral-600 text-xl shadow-lg">
+      <dialog className="absolute block pointer-events-none right-0 bottom-8 left-0 w-full translate-y-0 transition-transform z-[101] bg-transparent">
+        <section className="pointer-events-auto mx-auto w-96 p-8 bg-neutral-50 dark:bg-neutral-900 border-8 border-double border-neutral-600 text-xl shadow-lg">
           <p>
             Great job! Your blob &quot;{blobEvent.blob.name}&quot; reached level{" "}
             <strong>{blobEvent.blob.level}</strong> and learned a new skill:{" "}
@@ -34,7 +41,7 @@ export function SkillDialog({ blobEvent }: Props) {
             </em>
           </p>
           <footer className="flex gap-4 pt-2 justify-end">
-            <Button onClick={() => setClosing(true)}>Okay</Button>
+            <Button onClick={close}>Okay</Button>
           </footer>
         </section>
       </dialog>

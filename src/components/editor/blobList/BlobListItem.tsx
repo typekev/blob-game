@@ -56,6 +56,7 @@ export function BlobListItem({
       nextBlobName.length < 1 ||
       nextBlobName.length > 12 ||
       (blobNames.has(nextBlobName) && nextBlobName !== name),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [nextBlobName]
   );
 

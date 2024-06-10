@@ -17,7 +17,7 @@ export function BlobForm() {
 
   const submitDisabled = useMemo(
     () => blobName.length < MIN_LEN || blobName.length > MAX_LEN || !!nameTaken,
-    [blobName]
+    [blobName.length, nameTaken]
   );
 
   const onChangeBlobName = (e: React.ChangeEvent<HTMLInputElement>) => {

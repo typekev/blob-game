@@ -35,6 +35,7 @@ export function BlobAvatar({
       Math.random() * field.clientWidth,
       Math.random() * field.clientHeight,
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -50,12 +51,14 @@ export function BlobAvatar({
     isMounted
       ? setAlerts((prevAlerts) => [...prevAlerts, "+1"])
       : setIsMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exp]);
 
   useEffect(() => {
     isMounted
       ? setAlerts((prevAlerts) => [...prevAlerts, `Level ${level}!  `])
       : setIsMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
   useEffect(() => {

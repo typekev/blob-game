@@ -41,8 +41,12 @@ export function HelpDialog({ isOpen, close }: Props) {
         </li>
         <li>
           For programmers only -- To delete any DOM element on the screen, hold{" "}
-          <code className="bg-neutral-200 dark:bg-neutral-600 outline mx-1 px-1.5 text-sm">
+          <code className="whitespace-pre rounded-sm bg-neutral-200 dark:bg-neutral-600 outline mx-1 px-1.5 text-sm">
             alt
+          </code>{" "}
+          /{" "}
+          <code className="whitespace-pre rounded-sm bg-neutral-200 dark:bg-neutral-600 outline mx-1 px-1.5 text-sm">
+            option ⌥
           </code>{" "}
           and then click on the element.
         </li>
